@@ -1,0 +1,42 @@
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(writexl))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(mudata2))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library("rstudioapi"))
+suppressPackageStartupMessages(library(openxlsx))
+suppressPackageStartupMessages(library(viridis))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(janitor))
+ 
+setwd(dirname(getActiveDocumentContext()$path))
+
+###
+skills_assessment<-read_excel("Digital Literacy Skills Assessment v4.xlsx",sheet = "Digital Literacy Skills Assessm")
+
+skills_assessment<-skills_assessment%>%
+  rename("role"="(Role) What is your role?","Gender"="(Gender) What is your gender?","school"="(School) What is the name of your school ?" ,
+         "survey"="(Survey) How are you completing this survey? (If you choose printed posters the large images may be hidden)",
+         "own devices"= "(Own devices) What devices do you or your family own?",
+         "oftenly use Devices"="(Devices) How often do you use digital devices?","online"="(Online) How often do you use the Internet?",
+         "Reason for buying device"= "(Device) If you bought a new mobile phone or tablet - what would be the most important reason you would buy it?",
+         "use for internet data"="(Data) If you had alot of data- what would you prefer to spend it on?",
+         "Barriers"="(Barriers) What are the two biggest problems stopping you from using online content?",
+         "Devices"= "(Devices) DEVICES: In using computers, phones, or tablets,  I am a digital:",
+         "Devices barriers"="(Devices barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?",
+         "work productivity"="(Work) PRODUCTIVITY In my work and daily productivity tasks, I am a digital:",
+         "work Barriers"="(Work- barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?",
+         "APPs"= "(Apps) APPS: In using digital apps, I am a digital:","APPs barriers"="(Apps - barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?",
+         "Entertainment"="(Entertainment) ENTERTAINMENT: In using digital entertainment, I am a digital:",
+         "Entertainment barriers"="(Entertainment - barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?",
+         "communities"="(Communities) COMMUNITIES: In online communities, I am a digital:","communities barriers"= "(Communities- barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?",
+         "Education"="(Education) EDUCATION: In education, I am a digital:",
+         "Education barriers"="(Education - barriers) What would you like to learn next, and what problems or barriers stop you from improving your digtial skills in this area?","feedback"= "(Comments) Please provide additional feedback about this survey.")
+
+  mutate(school=case_when(school == Badbaado ABE centre~"Badbaado Abe Center",school == "Barbado Abe centre"~"Badbaado Abe Center"))
+  
+        
+
+
+
+
