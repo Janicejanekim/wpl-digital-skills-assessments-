@@ -167,23 +167,53 @@ ggplot(survey,aes(x = survey,y = freq,fill = survey,label=scales::percent(freq))
 ggsave("survey.png")
   
   ###devices owned
+gender_devices<-skills_assessment%>%
+  select(Gender,`Smart Phone`,`Basic Phone`,Tablet,Laptop)%>%
+  pivot_longer(!c(Gender), names_to = "Devices", values_to = "Responses")%>%
+  filter(Responses != "No")%>%
+  filter(Devices != "Laptop")%>%
+  filter(Devices !=  "Tablet")%>%
+  group_by(Devices,Gender)%>%
+  summarise(cnt = n())
+write.csv(gender_devices,"gdevices.csv")
+##
+owned_devices<-skills_assessment%>%
+  select(Gender,`Smart Phone`,`Basic Phone`,Tablet,Laptop)%>%
+  pivot_longer(!c(Gender), names_to = "Devices", values_to = "Responses")%>%
+  filter(Responses != "No")%>%
+  group_by(Devices)%>%
+  summarise(cnt = n())%>%
+  mutate(freq = round(cnt / sum(21),2)) %>% 
+  arrange(desc(freq))
 
-Gender_devices<-skills_assessment%>%
-  select(Gender,school,survey,`own devices`)%>%
-  tabyl(`own devices`,Gender)%>%
-  adorn_title()
+ggplot(owned_devices,aes(x = Devices,y = freq,fill = Devices,label=scales::percent(freq)))+
+  geom_bar(position="dodge",stat="identity",width = 0.4) +
+  scale_fill_manual(values = c("green3","greenyellow","green4","green2"))+
+  scale_y_continuous(labels = scales::percent,
+                     breaks = scales::pretty_breaks(n = 7))+
+  geom_text(nudge_y= .01,
+            color="black",
+            size = 4,
+            fontface="bold")+
+  labs(x = "Devices",
+       title = "Percentages Of Devices Owned")+
+  theme(legend.position = "none",
+        panel.spacing = unit(2, "lines"),
+        strip.text.x = element_text(size = 7),
+        axis.text.x = element_text(color = "black", size = 10,angle = 0,face = "bold"),
+        axis.text.y = element_text(color="black", size = 9, angle = 0,face = "bold"),
+        axis.title.x = element_text(colour="black", size = 10,face = "bold"),
+        axis.title.y = element_text(colour="black", size = 15,face = "bold",hjust = 0.5),
+        legend.title = element_text(color = "black", size = 5,face = "bold"),
+        legend.text = element_text(color = "black", size = 7,face = "bold"),
+        plot.title = element_text(face = "bold",hjust = 0.5,size = 12))
+ggsave("devices.png")
+ 
 
 #####
 
 
-# 
-# wpl<-skills_assessment%>%
-#   select(Gender,school,survey,`own devices`,`oftenly use Devices`,online)%>%
-#   pivot_longer(!c(Gender,school), names_to = "reason_cycling", values_to = "Responses")%>%
-#   group_by(`own devices`)%>%
-#   summarise(cnt = n())%>%
-#   mutate(freq = round(cnt / sum(21),2)) %>% 
-#   arrange(desc(freq))
+
 
 ####
   Devices<-skills_assessment%>%
@@ -192,29 +222,8 @@ Gender_devices<-skills_assessment%>%
     summarise(cnt = n())%>%
     mutate(freq = round(cnt / sum(21),2)) %>% 
     arrange(desc(freq))
-  ggplot(Devices,aes(x = `own devices`,y = freq,fill = `own devices`,label=scales::percent(freq)))+
-    geom_bar(position="dodge",stat="identity",width = 0.4) +
-    scale_fill_manual(values = c("mediumseagreen","chartreuse2","chocolate2",
-                                 "darkturquoise","darkgoldenrod2"))+
-    scale_y_continuous(labels = scales::percent,
-                       breaks = scales::pretty_breaks(n = 7))+
-    geom_text(nudge_y= .01,
-              color="black",
-              size = 4,
-              fontface="bold")+
-    labs(x = "Devices",
-         title = "percentages of devices owned")+
-    theme(legend.position = "none",
-          panel.spacing = unit(2, "lines"),
-          strip.text.x = element_text(size = 10),
-          axis.text.x = element_text(color = "black", size = 10,angle = 90,face = "bold"),
-          axis.text.y = element_text(color="black", size = 10, angle = 0,face = "bold"),
-          axis.title.x = element_text(colour="black", size = 10,face = "bold"),
-          axis.title.y = element_text(colour="black", size = 15,face = "bold",hjust = 0.5),
-          legend.title = element_text(color = "black", size = 5,face = "bold"),
-          legend.text = element_text(color = "black", size = 7,face = "bold"),
-          plot.title = element_text(face = "bold",hjust = 0.5,size = 10))
-ggsave("devices.png")
+
+ 
 #####
 
 ####
